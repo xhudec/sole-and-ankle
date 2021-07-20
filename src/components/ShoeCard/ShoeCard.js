@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 
 import { COLORS, WEIGHTS } from "../../constants";
 import { formatPrice, pluralize, isNewShoe } from "../../utils";
+import ShoeCardFlag from "../ShoeCardFlag";
 import Spacer from "../Spacer";
 
 const ShoeCard = ({
@@ -36,14 +37,18 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {variant !== "default" ? <ShoeCardFlag variant={variant} /> : null}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price isOnSale={variant === "on-sale"}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
+          {variant === "on-sale" ? (
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          ) : null}
         </Row>
       </Wrapper>
     </Link>
@@ -84,7 +89,10 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  color: ${p => p.isOnSale ? COLORS.gray[700] : COLORS.gray[900]};
+  text-decoration: ${p => p.isOnSale ? 'line-through' : 'none'}
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
